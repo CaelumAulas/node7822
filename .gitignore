@@ -1,0 +1,4 @@
+node_modules
+
+# por causa do Mac do Art
+.DS_Store
