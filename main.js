@@ -22,12 +22,10 @@ servidor.get("/produtos", function(req, resp){
         }
     ]
 
-    const objetoTemplate = {
-        livros: livros
-    }
-
-    resp.render("produtos/lista.ejs", objetoTemplate)
+    resp.render("produtos/lista.ejs", {livros})
 })
+
+servidor.use(express.static('./static'))
 
 // testar antes de rodar no trminal => export NODE_PORT=5100
 if(process.env.NODE_PORT == undefined) {
