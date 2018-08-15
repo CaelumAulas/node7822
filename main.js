@@ -1,31 +1,4 @@
-const express = require('express')
-
-const servidor = express()
-
-servidor.get("/", function(pedido, resposta) {
-    resposta.render("home.ejs")
-})
-
-servidor.get("/produtos", function(req, resp){
-    const livros = [
-        {
-            titulo: "Livro 1"
-            ,preco: 50
-            ,descricao: "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-            
-        }
-        ,{
-            titulo: "Livro 2"
-            ,preco: 60
-            ,descricao: "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-            
-        }
-    ]
-
-    resp.render("produtos/lista.ejs", {livros})
-})
-
-servidor.use(express.static('./static'))
+const servidor = require('./servidor')
 
 // testar antes de rodar no trminal => export NODE_PORT=5100
 if(process.env.NODE_PORT == undefined) {
@@ -34,7 +7,7 @@ if(process.env.NODE_PORT == undefined) {
 
 const porta = process.env.NODE_PORT
 
-servidor.listen(porta, function subiu(){
+servidor.listen(porta, function subiu(){  
     console.log("Servidor subiu em http://localhost:" + porta)
 })
 
