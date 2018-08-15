@@ -1,20 +1,17 @@
-function listagemProdutos(req, resp){
-    const livros = [
-        {
-            titulo: "Livro 1"
-            ,preco: 50
-            ,descricao: "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-            
-        }
-        ,{
-            titulo: "Livro 2"
-            ,preco: 60
-            ,descricao: "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-            
-        }
-    ]
+const connectionFactory = require("../db/connectionFactory")
 
-    resp.render("produtos/lista.ejs", {livros})
+function listagemProdutos(req, resp){
+    const conexao = connectionFactory.getConnection()
+
+    // Async não criam variável geralmente
+    conexao.query("SELECT * FROM livros", function(erro, resultado = []){
+        if(erro == null){
+            resp.render("produtos/lista.ejs", {livros: resultado})
+            conexao.end()
+        } else {
+            resp.send(erro)
+        }
+    })
 }
 
 function cadastroProdutos(){
