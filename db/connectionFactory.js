@@ -2,13 +2,12 @@ const mysql = require('mysql')
 
 // Módulo é um singleton
 function criaConexao(){
-    console.log("Criando conexão")
     return mysql.createConnection({
-        host: "localhost",
-        port: 32768,
-        user: "root",
-        password: "",
-        database: "cdc"
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWD,
+        database: process.env.DB_NAME
     })
 }
 

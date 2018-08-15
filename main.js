@@ -1,9 +1,6 @@
 const servidor = require('./servidor')
 
-// testar antes de rodar no trminal => export NODE_PORT=5100
-if(process.env.NODE_PORT == undefined) {
-    process.env.NODE_PORT = 3000
-}
+require("dotenv").config()
 
 const porta = process.env.NODE_PORT
 

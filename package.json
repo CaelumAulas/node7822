@@ -1,12 +1,13 @@
 {
   "dependencies": {
+    "dotenv": "^6.0.0",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "mysql": "^2.16.0"
   },
   "scripts": {
     "start": "node main.js",
-    "start-dev": "NODE_PORT=4200 nodemon main.js"
+    "start-dev": "nodemon main.js"
   },
   "devDependencies": {
     "nodemon": "^1.18.3"

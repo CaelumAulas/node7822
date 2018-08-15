@@ -7,10 +7,10 @@ function listagemProdutos(req, resp){
     conexao.query("SELECT * FROM livros", function(erro, resultado = []){
         if(erro == null){
             resp.render("produtos/lista.ejs", {livros: resultado})
-            conexao.end()
         } else {
             resp.send(erro)
         }
+        conexao.end()
     })
 }
 
