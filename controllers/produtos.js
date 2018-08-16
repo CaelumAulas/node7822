@@ -1,21 +1,29 @@
+
+// função construtora
+const ProdutoDAO = require("./produtoDAO")
+
 const connectionFactory = require("../db/connectionFactory")
 
 function listagemProdutos(req, resp){
     const conexao = connectionFactory.getConnection()
 
-    // Async não criam variável geralmente
-    conexao.query("SELECT * FROM livros", function(erro, resultado = []){
-        if(erro == null){
+    const produtoDAO = ProdutoDAO(conexao);
+    
+    produtoDAO.lista(
+        function success(resultado = []){
             resp.render("produtos/lista.ejs", {livros: resultado})
-        } else {
+
+            conexao.end()
+        }
+        , function error(erro){
             resp.send(erro)
         }
-        conexao.end()
-    })
+    )
+
 }
 
 function cadastroProdutos(){
-    return 
+    produtoDAO.save()
 }
 
 // revealing module
