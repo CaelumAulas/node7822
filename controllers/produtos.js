@@ -10,7 +10,7 @@ function listagemProdutos(req, resp){
     
     produtoDAO.lista(
         function success(resultado = []){
-            resp.render("produtos/lista.ejs", {livros: resultado})
+            resp.render("produtos/lista", {livros: resultado})
 
             conexao.end()
         }
@@ -20,6 +20,12 @@ function listagemProdutos(req, resp){
     )
 }
 
+function mostraForm(req, resp){
+    resp.render('produtos/form', {
+        validationErrors: []
+    })
+}
+
 function cadastroProdutos(){
     produtoDAO.save()
 }
@@ -27,5 +33,6 @@ function cadastroProdutos(){
 // revealing module
 module.exports = {
     listagem: listagemProdutos,
+    form: mostraForm,
     cadastro: cadastroProdutos
 }
