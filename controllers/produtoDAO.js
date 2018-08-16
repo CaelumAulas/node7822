@@ -20,10 +20,6 @@ function cadastraLivros(){
 }
 
 module.exports = function ProdutoDAO(conexao){
-    // private
-    const x = ""
-
-    // public
     return {
         lista: (funcaoCallbackSucesso, funcaoCallbackDeuRuim) => 
             pegaLivros(conexao, funcaoCallbackSucesso, funcaoCallbackDeuRuim)

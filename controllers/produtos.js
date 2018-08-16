@@ -1,13 +1,12 @@
-
 // função construtora
-const ProdutoDAO = require("./produtoDAO")
+const ProdutoDAO = require("./produtoDAO3")
 
 const connectionFactory = require("../db/connectionFactory")
 
 function listagemProdutos(req, resp){
     const conexao = connectionFactory.getConnection()
 
-    const produtoDAO = ProdutoDAO(conexao);
+    const produtoDAO = new ProdutoDAO(conexao)
     
     produtoDAO.lista(
         function success(resultado = []){
@@ -19,7 +18,6 @@ function listagemProdutos(req, resp){
             resp.send(erro)
         }
     )
-
 }
 
 function cadastroProdutos(){
