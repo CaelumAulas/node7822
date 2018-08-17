@@ -26,8 +26,33 @@ function mostraForm(req, resp){
     })
 }
 
-function cadastroProdutos(){
-    produtoDAO.save()
+const queryString = require('query-string')
+function cadastroProdutos(req, resp){
+
+    let bodyTexto = ""
+
+    req.on("data", function(chunk){
+        bodyTexto += chunk.toString()
+    })
+    
+    req.on("end", function(){
+        req.body = queryString.parse(bodyTexto)
+
+        const livro = req.body
+
+        const conexao = connectionFactory.getConnection()
+        const produtoDAO = new ProdutoDAO(conexao)
+
+        produtoDAO.save(
+            livro
+            , function(){
+                resp.redirect('/produtos')
+            }
+            , function(erro) {
+                resp.send(erro)
+            }
+        )
+    })
 }
 
 // revealing module
