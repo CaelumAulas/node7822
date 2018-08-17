@@ -14,9 +14,20 @@ require('./routes/produtos')(servidor)
 
 servidor.use(express.static('./static'))
 
+servidor.use(function(erro, req, resp, next){
+    if(process.env.NODE_ENV == "dev"){
+        resp.send(erro)
+    } else {
+        console.error(erro)
+        resp.render("erros/erro", {
+            erro: "500 - Algo deu errado no servidor."
+        })
+    }
+})
+
 servidor.use(function(req, resp){
     resp.render("erros/erro", {
-        erro: "Página não encontrada"
+        erro: "404 - Página não encontrada"
     })
 })
 

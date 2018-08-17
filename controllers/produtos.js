@@ -3,7 +3,7 @@ const ProdutoDAO = require("./produtoDAO3")
 
 const connectionFactory = require("../db/connectionFactory")
 
-function listagemProdutos(req, resp){
+function listagemProdutos(req, resp, callbackNext){
     const conexao = connectionFactory.getConnection()
 
     const produtoDAO = new ProdutoDAO(conexao)
@@ -15,7 +15,7 @@ function listagemProdutos(req, resp){
             conexao.end()
         }
         , function error(erro){
-            resp.send(erro)
+            callbackNext(erro)
         }
     )
 }
@@ -26,11 +26,11 @@ function mostraForm(req, resp){
     })
 }
 
-function cadastroProdutos(req, resp){
+function cadastroProdutos(req, resp, callbackNext){
     const livro = req.body
 
     const conexao = connectionFactory.getConnection()
-    const produtoDAO = new ProdutoDAO(conexao)
+    const produtoDAO = new ProtoDAO(conexao)
 
     produtoDAO.save(
         livro
@@ -38,7 +38,7 @@ function cadastroProdutos(req, resp){
             resp.redirect('/produtos')
         }
         , function(erro) {
-            resp.send(erro)
+            callbackNext(erro)
         }
     )
 }
