@@ -1,6 +1,6 @@
 
 function pegaLivros(conexao, funcaoCallbackSucesso, funcaoCallbackDeuRuim) {
-    conexao.query("SELECT * FROM livros", function (erro, resultado) {
+    conexao.query("SELECT * FROM Livros", function (erro, resultado) {
         try {
             if (erro == null) {
                 funcaoCallbackSucesso(resultado);

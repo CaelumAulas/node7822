@@ -6,6 +6,9 @@ servidor.set("view engine", "ejs")
 servidor.use(express.urlencoded())
 servidor.use(express.json())
 
+const expressValidator = require("express-validator")
+servidor.use(expressValidator())
+
 servidor.get("/", function(pedido, resposta) {
     resposta.render("home")
 })
@@ -16,19 +19,26 @@ servidor.use(express.static('./static'))
 
 servidor.use(function(erro, req, resp, next){
     if(process.env.NODE_ENV == "dev"){
-        resp.send(erro)
+        resp.status(500).send(erro)
     } else {
         console.error(erro)
-        resp.render("erros/erro", {
-            erro: "500 - Algo deu errado no servidor."
+        resp.format({
+            json: () => resp.send(erro)
+            ,html: () => resp
+                .status(500)
+                .render("erros/erro", {
+                    erro: "500 - Algo deu errado no servidor."
+                })
         })
     }
 })
 
 servidor.use(function(req, resp){
-    resp.render("erros/erro", {
-        erro: "404 - Página não encontrada"
-    })
+    resp
+        .status(404)
+        .render("erros/erro", {
+            erro: "404 - Página não encontrada"
+        })
 })
 
 module.exports = servidor

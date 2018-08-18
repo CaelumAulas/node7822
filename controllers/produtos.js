@@ -1,5 +1,5 @@
 // função construtora
-const ProdutoDAO = require("./produtoDAO3")
+const ProdutoDAO = require("../db/produtoDAO3")
 
 const connectionFactory = require("../db/connectionFactory")
 
@@ -9,9 +9,11 @@ function listagemProdutos(req, resp, callbackNext){
     const produtoDAO = new ProdutoDAO(conexao)
     
     produtoDAO.lista(
-        function success(resultado = []){
-            resp.render("produtos/lista", {livros: resultado})
-
+        function success(resultado = []){                        
+            resp.format({
+                json: () => resp.send({livros: resultado})
+                ,html: () => resp.render("produtos/lista", {livros: resultado})
+            })    
             conexao.end()
         }
         , function error(erro){
@@ -29,18 +31,31 @@ function mostraForm(req, resp){
 function cadastroProdutos(req, resp, callbackNext){
     const livro = req.body
 
-    const conexao = connectionFactory.getConnection()
-    const produtoDAO = new ProtoDAO(conexao)
+    req.assert('preco',  "Preço inválido").isNumeric()
+    req.assert('titulo', "Título obrigatório").notEmpty()
 
-    produtoDAO.save(
-        livro
-        , function(){
-            resp.redirect('/produtos')
-        }
-        , function(erro) {
-            callbackNext(erro)
-        }
-    )
+    let listaErros = req.validationErrors()
+
+    if(!listaErros){
+        const conexao = connectionFactory.getConnection()
+        const produtoDAO = new ProdutoDAO(conexao)
+    
+        produtoDAO.save(
+            livro
+            , function(){
+                resp.redirect('/produtos')
+            }
+            , function(erro) {
+                callbackNext(erro)
+            }
+        )
+    } else {
+        resp
+            .status(400)
+            .render('produtos/form', {
+                validationErrors: listaErros
+            })
+    }
 }
 
 // revealing module
