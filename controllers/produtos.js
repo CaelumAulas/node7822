@@ -4,22 +4,26 @@ const ProdutoDAO = require("../db/produtoDAO3")
 const connectionFactory = require("../db/connectionFactory")
 
 function listagemProdutos(req, resp, callbackNext){
-    const conexao = connectionFactory.getConnection()
+    const promiseConexao = connectionFactory.getConnection()
 
-    const produtoDAO = new ProdutoDAO(conexao)
-    
-    produtoDAO.lista(
-        function success(resultado = []){                        
+    promiseConexao
+        .then(function(conexao){
+            const produtoDAO = new ProdutoDAO(conexao)
+            return produtoDAO.lista()
+        })
+        .then(function success(resultado = []){                        
             resp.format({
                 json: () => resp.send({livros: resultado})
                 ,html: () => resp.render("produtos/lista", {livros: resultado})
             })    
-            conexao.end()
-        }
-        , function error(erro){
+            return promiseConexao                
+        })
+        .then(function(conexao){
+            conexao.release()
+        })
+        .catch(function(erro){
             callbackNext(erro)
-        }
-    )
+        })
 }
 
 function mostraForm(req, resp){
@@ -37,7 +41,7 @@ function cadastroProdutos(req, resp, callbackNext){
     let listaErros = req.validationErrors()
 
     if(!listaErros){
-        const conexao = connectionFactory.getConnection()
+        const conexao = connectionFactory.createConnection()
         const produtoDAO = new ProdutoDAO(conexao)
     
         produtoDAO.save(

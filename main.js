@@ -1,6 +1,6 @@
-const servidor = require('./servidor')
-
 require("dotenv").config()
+
+const servidor = require('./servidor')
 
 const porta = process.env.NODE_PORT
 

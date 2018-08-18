@@ -4,20 +4,24 @@ class ProdutoDAO{
         this.conexao = conexao
     }
 
-    lista(funcaoCallbackSucesso, funcaoCallbackDeuRuim) {
-        this.conexao.query("SELECT * FROM livros", function (erro, resultado) {
-            try {
-                if (erro == null) {
-                    funcaoCallbackSucesso(resultado);
+    lista() {
+        const conexao = this.conexao
+        return new Promise(function(resolve, reject){
+            conexao.query("SELECT * FROM livros", function (erro, resultado) {
+                try {
+                    if (erro == null) {
+                        resolve(resultado);
+                    }
+                    else {
+                        reject(erro);
+                    }
                 }
-                else {
-                    funcaoCallbackDeuRuim(erro);
+                catch (erro) {
+                    reject(erro.toString());
                 }
-            }
-            catch (erro) {
-                funcaoCallbackDeuRuim(erro.toString());
-            }
+            })
         })
+        
     }
 
     save(livro, cbSucesso, cbErro){

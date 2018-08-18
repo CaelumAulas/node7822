@@ -11,6 +11,31 @@ function criaConexao(){
     })
 }
 
+const pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWD,
+    database: process.env.DB_NAME
+})
+
+function getConnection(){
+    return new Promise(function(cbSucesso, cbErro){
+        pool.getConnection(function(erro, conexao){
+            try {
+                if(erro == null){
+                    cbSucesso(conexao)
+                } else {
+                    cbErro(erro)
+                }
+            } catch(erro){
+                cbErro(erro.toString())
+            }
+        })
+    })    
+}
+
 module.exports = {
-    getConnection: criaConexao
+    createConnection: criaConexao
+    ,getConnection: getConnection
 }
