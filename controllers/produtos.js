@@ -38,28 +38,26 @@ function cadastroProdutos(req, resp, callbackNext){
     req.assert('preco',  "Preço inválido").isNumeric()
     req.assert('titulo', "Título obrigatório").notEmpty()
 
-    let listaErros = req.validationErrors()
+    const promiseValidacao = req.asyncValidationErrors()
 
-    if(!listaErros){
-        const conexao = connectionFactory.createConnection()
-        const produtoDAO = new ProdutoDAO(conexao)
-    
-        produtoDAO.save(
-            livro
-            , function(){
-                resp.redirect('/produtos')
-            }
-            , function(erro) {
+    promiseValidacao
+        .then(() => connectionFactory.getConnection())
+        .then((conexao) => {
+            const produtoDAO = new ProdutoDAO(conexao)
+            return produtoDAO.save(livro) 
+        })
+        .then(() => resp.redirect('/produtos'))
+        .catch((erro) => {
+            if(erro.length){
+                resp
+                    .status(400)
+                    .render('produtos/form', {
+                        validationErrors: erro
+                    })
+            } else {
                 callbackNext(erro)
             }
-        )
-    } else {
-        resp
-            .status(400)
-            .render('produtos/form', {
-                validationErrors: listaErros
-            })
-    }
+        })
 }
 
 // revealing module

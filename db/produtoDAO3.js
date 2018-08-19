@@ -24,17 +24,19 @@ class ProdutoDAO{
         
     }
 
-    save(livro, cbSucesso, cbErro){
-        this.conexao.query("INSERT INTO livros SET ?", livro, function(erro){
-            try{
-                if(erro == null){
-                    cbSucesso()
-                } else {
-                    cbErro(erro)
-                }
-            } catch(error) {
-                cbErro(error.toString())
-            }     
+    save(livro){
+        return new Promise((resolve, reject) => {
+            this.conexao.query("INSERT INTO livros SET ?", livro, function(erro) {
+                try{
+                    if(erro == null){
+                        resolve()
+                    } else {
+                        reject(erro)
+                    }
+                } catch(error) {
+                    reject(error.toString())
+                }     
+            })
         })
     }
 
